@@ -1,5 +1,6 @@
 const LoginRouter = require('./login-router')
 const MissingParamError = require('../helpers/missing-param-error')
+const UnauthorizedError = require('../helpers/unauthorized-error')
 
 const makeSut = () => {
   class AuthUseCaseSpy {
@@ -40,6 +41,7 @@ test('Should return 400 if no password is provided', () => {
   }
   const httpResponse = sut.route(httpRequest)
   expect(httpResponse.statusCode).toBe(400)
+  expect(httpResponse.body).toEqual(new MissingParamError('email'))
 })
 
 test('Should return 500 if no httpRequest is provided', () => {
@@ -77,5 +79,6 @@ test('Should return 500 if httpRequest has no body', () => {
     }
     const httpResponse = sut.route(httpRequest)
     expect(httpResponse.statusCode).toBe(401)
+    expect(httpResponse.body).toEqual(new UnauthorizedError())
   })
 })
